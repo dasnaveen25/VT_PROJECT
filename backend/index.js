@@ -12,7 +12,11 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors()); // optional: only if needed
+app.use(cors({
+     origin:"  http://localhost:5173/",
+      credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+      
+})); // optional: only if needed
 
 // Routes
 app.use("/api/auth", authRouter);

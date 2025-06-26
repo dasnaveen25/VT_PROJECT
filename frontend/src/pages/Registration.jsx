@@ -4,10 +4,32 @@ import google from "../assets/google.jpeg" // make sure this path is correct
 import { useNavigate } from 'react-router-dom'
 import { IoEyeOutline } from "react-icons/io5";
 import { IoEyeOffSharp } from "react-icons/io5";
+import {useContext} from 'react'
+import authDataContext from '../context/AuthContext'
+import axios from 'axios'
 function Registration() {
 
-  const [show, setshow] = useState(false)
+  const [show, setshow] = useState(false) 
+     let {serverUrl} = useContext(authDataContext)
+    let [name,setName] = useState("")
+    let [email,setEmail] = useState("")
+    let [password,setPassword] = useState("")
   let navigate = useNavigate()
+
+  const handleSignup = async (e) => {
+        e.preventDefault()
+        try {
+         const result = await axios.post(serverUrl + '/api/auth/registration',{ //yahi wo code h wo data ko backend ke route mai bhejega
+            name,email,password
+         },{withCredentials:true})
+           console.log(result.data)
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
   return (
     <div className='w-[100vw] h-[100vh] bg-gradient-to-l from-[#141414] to-[#0c2025] text-white flex flex-col items-center justify-start'>
       
@@ -25,7 +47,7 @@ function Registration() {
 
       {/* Form Card */}
       <div className='max-w-[600px] w-[90%] h-[500px] bg-[#00000025] border-[1px] border-[#96969635] backdrop:blur-2xl rounded-lg shadow-lg flex items-center justify-center'>
-        <form action="" className='w-[90%] h-[90%] flex flex-col items-center justify-start gap-[20px]'>
+        <form action="" onSubmit={handleSignup} className='w-[90%] h-[90%] flex flex-col items-center justify-start gap-[20px]'>
 
           {/* Google Registration */}
           <div className='w-[90%] h-[50px] bg-[#42656cae] rounded-lg flex items-center justify-center gap-[10px] py-[20px] cursor-pointer'>
@@ -46,19 +68,19 @@ function Registration() {
               type="text"
               placeholder="User Name"
               className='w-[100%] h-[50px] border-[2px]  border-[#96969635] backdrop:blur-sm rounded-lg  shadow-lg bg-transparent placeholder-[#fffffffc7] px-[20px] font-semibold'
-              required
+              required onChange={(e)=>setName(e.target.value)} value={name}
             />
             <input
               type="email"
               placeholder="Email"
               className='w-[100%] h-[50px] border-[2px]  border-[#96969635] backdrop:blur-sm rounded-lg  shadow-lg bg-transparent placeholder-[#fffffffc7] px-[20px] font-semibold'
-              required
+              required onChange={(e)=>setEmail(e.target.value)} value={email}
             />
             <input
               type={show ? "text" : "password"}
               placeholder="Password"
               className='w-[100%] h-[50px] border-[2px]  border-[#96969635] backdrop:blur-sm rounded-lg  shadow-lg bg-transparent placeholder-[#fffffffc7] px-[20px] font-semibold'
-              required
+              required onChange={(e)=>setPassword(e.target.value)} value={password}
             />
             {/* Eye Icon */}
             {show && <IoEyeOutline className='w-[20px] h-[20px]  cursor-pointer absolute right-[5%]' onClick={()=>setshow(prev => !prev)} />}
